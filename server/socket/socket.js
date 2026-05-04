@@ -12,7 +12,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
   // Configure CORS policy to allow connections from localhost:3000
   cors: {
-    origin: 'http://localhost:3000',
+    origin: 'http://tankary-chatapp.duckdns.org/',
     methods: ['GET', 'POST'],
   },
 });

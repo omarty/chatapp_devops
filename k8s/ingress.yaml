@@ -10,7 +10,7 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   rules:
-    - host: mern-chatapp.com
+    - host: tankarychatapp.com
       http:
         paths:
           - pathType: Prefix

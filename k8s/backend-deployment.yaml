@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: chatapp-backend
-        image: anirek/chat-backend:latest
+        image: omartankary/chatappbackend:1.0
         ports:
         - containerPort: 5000
         env:
