@@ -89,7 +89,7 @@ pipeline {
             steps {
                 withCredentials([
                     usernamePassword(
-                        credentialsId: 'docker-hub',
+                        credentialsId: 'dockerhub-creds',
                         usernameVariable: 'DOCKER_USER',
                         passwordVariable: 'DOCKER_PASS'
                     )
@@ -109,28 +109,36 @@ pipeline {
             }
         }
 
-        stage('Deploy to Kubernetes') {
-            when {
-                expression { fileExists('k8s/backend-deployment.yaml') }
-            }
-            steps {
-                script {
-                    def b = "${params.DOCKERHUB_NAMESPACE}/chatappbackend"
-                    def f = "${params.DOCKERHUB_NAMESPACE}/chatappfrontend"
-                    // Noms alignés sur k8s/backend-deployment.yaml et k8s/frontend-deployment.yaml
-                    sh """
-                        kubectl set image deployment/backend-deployment \\
-                          chatapp-backend=${b}:${IMAGE_TAG} \\
-                          -n ${K8S_NAMESPACE} --record
-                        kubectl set image deployment/frontend-deployment \\
-                          chatapp-frontend=${f}:${IMAGE_TAG} \\
-                          -n ${K8S_NAMESPACE} --record
-                        kubectl rollout status deployment/backend-deployment -n ${K8S_NAMESPACE} --timeout=180s
-                        kubectl rollout status deployment/frontend-deployment -n ${K8S_NAMESPACE} --timeout=180s
-                    """
-                }
+   stage('Deploy to Kubernetes') {
+    when {
+        expression { fileExists('k8s/backend-deployment.yaml') }
+    }
+
+    steps {
+        withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+            script {
+                def b = "${params.DOCKERHUB_NAMESPACE}/chatappbackend"
+                def f = "${params.DOCKERHUB_NAMESPACE}/chatappfrontend"
+
+                sh """
+                    kubectl set image deployment/backend-deployment \
+                      chatapp-backend=${b}:${IMAGE_TAG} \
+                      -n ${K8S_NAMESPACE} --record
+
+                    kubectl set image deployment/frontend-deployment \
+                      chatapp-frontend=${f}:${IMAGE_TAG} \
+                      -n ${K8S_NAMESPACE} --record
+
+                    kubectl rollout status deployment/backend-deployment \
+                      -n ${K8S_NAMESPACE} --timeout=180s
+
+                    kubectl rollout status deployment/frontend-deployment \
+                      -n ${K8S_NAMESPACE} --timeout=180s
+                """
             }
         }
+    }
+}
     }
 
     post {
