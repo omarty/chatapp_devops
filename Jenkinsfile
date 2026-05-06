@@ -123,11 +123,11 @@ pipeline {
                 sh """
                     kubectl set image deployment/backend-deployment \
                       chatapp-backend=${b}:${IMAGE_TAG} \
-                      -n ${K8S_NAMESPACE} --record
+                      -n ${K8S_NAMESPACE} 
 
                     kubectl set image deployment/frontend-deployment \
                       chatapp-frontend=${f}:${IMAGE_TAG} \
-                      -n ${K8S_NAMESPACE} --record
+                      -n ${K8S_NAMESPACE} 
 
                     kubectl rollout status deployment/backend-deployment \
                       -n ${K8S_NAMESPACE} --timeout=180s
