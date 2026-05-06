@@ -11,6 +11,8 @@ import connectToMongoDB from './database/connectToMdb.js';
 // Load environment variables from .env
 dotenv.config();
 
+app.set('trust proxy', 1);
+
 const PORT_URL = process.env.PORT || 5000;
 const __dirname = path.resolve();
 

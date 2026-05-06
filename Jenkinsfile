@@ -141,9 +141,9 @@ pipeline {
 }
     }
 
-    post {
-        always {
-            sh 'docker logout || true'
-        }
+  post {
+    always {
+        echo 'Pipeline terminé'
     }
+}
 }
