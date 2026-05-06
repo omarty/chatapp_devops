@@ -5,7 +5,7 @@ const SocketContext = createContext();
 export const useSocketContext = () => {
   return useContext(SocketContext);
 };
-const BACKEND_URL = 'http://localhost:5000';
+const BACKEND_URL = 'http://tankary-chatapp.duckdns.org/api';
 export const SocketContextProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
